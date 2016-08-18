@@ -40,7 +40,7 @@ int main() {
 
   do {
     char rbuf[BUFSIZ];
-    memset(rbuf, 0, BUFSIZ);
+    memset(rbuf, '\0', BUFSIZ);
     total = safe_read_string(fd, rbuf, BUFSIZ);
     strcat(buf, rbuf);
   } while (total > 0);
