@@ -4,8 +4,9 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
+#include <string.h>
 
-int safe_read_string(int fd, char *buf, int len) {
+int safe_read_string(int fd, void *buf, int len) {
   int total;
   ssize_t ret;
 
@@ -35,8 +36,15 @@ int main() {
     perror("read");
     return 0;
   }
-  total = safe_read_string(fd, buf, sizeof(buf));
-  printf("%i\n", total);
+  total = 0;
+
+  do {
+    char rbuf[BUFSIZ];
+    memset(rbuf, 0, BUFSIZ);
+    total = safe_read_string(fd, rbuf, BUFSIZ);
+    strcat(buf, rbuf);
+  } while (total > 0);
+
   printf("%s\n", buf);
 
   close(fd);
