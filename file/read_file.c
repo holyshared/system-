@@ -5,9 +5,9 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 
-void read_bytes(int fd, char *buf, int len) {
+int safe_read_string(int fd, char *buf, int len) {
+  int total;
   ssize_t ret;
-  int errno;
 
   while(len != 0 && (ret = read(fd, buf, len)) != 0) {
     if (ret == -1) {
@@ -15,16 +15,19 @@ void read_bytes(int fd, char *buf, int len) {
         continue;
       }
       perror("read");
-      break;
+      return -1;
     }
     len -= ret;
     buf += ret;
+    total += ret;
   }
+  return total;
 }
 
 int main() {
   int fd;
-  char buf[256];
+  int total;
+  char buf[BUFSIZ];
 
   fd = open("./fixture.log", O_RDONLY);
 
@@ -32,7 +35,8 @@ int main() {
     perror("read");
     return 0;
   }
-  read_bytes(fd, buf, sizeof(buf));
+  total = safe_read_string(fd, buf, sizeof(buf));
+  printf("%i\n", total);
   printf("%s\n", buf);
 
   close(fd);
