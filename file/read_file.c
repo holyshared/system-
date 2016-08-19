@@ -1,33 +1,39 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <errno.h>
-#include <sys/types.h>
-#include <sys/stat.h>
 #include <fcntl.h>
 #include <string.h>
 
-int safe_read_string(int fd, void *buf, int len) {
-  int total;
+ssize_t safe_read_string(int fd, void *buf, ssize_t len) {
   ssize_t ret;
+  ssize_t total;
 
-  while(len != 0 && (ret = read(fd, buf, len)) != 0) {
-    if (ret == -1) {
-      if (errno == EINTR) {
-        continue;
-      }
-      perror("read");
-      return -1;
+  total = 0;
+
+  while(len > 0) {
+    ret = read(fd, buf, len);
+
+    //Interrupted system call
+    if (ret < 0 && errno == EINTR) {
+      continue;
     }
+
+    //EOF or Error
+    if (ret <= 0) {
+      return ret;
+    }
+
     len -= ret;
     buf += ret;
     total += ret;
   }
+
   return total;
 }
 
 int main() {
   int fd;
-  int total;
+  ssize_t total;
   char buf[BUFSIZ];
 
   fd = open("./fixture.log", O_RDONLY);
@@ -40,8 +46,8 @@ int main() {
 
   do {
     char rbuf[BUFSIZ];
-    memset(rbuf, '\0', BUFSIZ);
-    total = safe_read_string(fd, rbuf, BUFSIZ);
+    memset(rbuf, '\0', sizeof(rbuf));
+    total = safe_read_string(fd, rbuf, sizeof(rbuf));
     strcat(buf, rbuf);
   } while (total > 0);
 
