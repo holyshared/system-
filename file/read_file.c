@@ -5,13 +5,10 @@
 #include <string.h>
 
 ssize_t safe_read_string(int fd, void *buf, ssize_t len) {
-  ssize_t ret;
-  ssize_t total;
-
-  total = 0;
+  ssize_t total = 0;
 
   while(len > 0) {
-    ret = read(fd, buf, len);
+    ssize_t ret = read(fd, buf, len);
 
     //Interrupted system call
     if (ret < 0 && errno == EINTR) {
@@ -32,17 +29,15 @@ ssize_t safe_read_string(int fd, void *buf, ssize_t len) {
 }
 
 int main() {
-  int fd;
-  ssize_t total;
-  char buf[BUFSIZ];
+  char buf[BUFSIZ] = {0};
 
-  fd = open("./fixture.log", O_RDONLY);
+  int fd = open("./fixture.log", O_RDONLY);
 
   if (fd == -1) {
     perror("read");
     return 0;
   }
-  total = 0;
+  ssize_t total = 0;
 
   do {
     char rbuf[BUFSIZ];
