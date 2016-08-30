@@ -6,8 +6,8 @@
 
 int main() {
   struct pollfd fds[2];
-  struct pollfd in = { STDIN_FILENO, POLLIN };
-  struct pollfd out = { STDOUT_FILENO, POLLOUT };
+  struct pollfd in = { .fd = STDIN_FILENO, .events = POLLIN };
+  struct pollfd out = { .fd = STDOUT_FILENO, .events = POLLOUT };
 
   fds[0] = in;
   fds[1] = out;
