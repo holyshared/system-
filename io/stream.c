@@ -1,13 +1,13 @@
 #include <stdio.h>
 
+struct pirate {
+  char name[100];
+  unsigned long booty;
+  unsigned int bread_len;
+};
+
 int main(void) {
   FILE *in, *out;
-
-  struct pirate {
-    char name[100];
-    unsigned long booty;
-    unsigned int bread_len;
-  };
 
   struct pirate p;
   struct pirate blackbread = { "Edward Teach", 950, 48 };

@@ -4,7 +4,7 @@
 #include <fcntl.h>
 #include <string.h>
 
-ssize_t safe_read_string(int fd, void *buf, ssize_t len) {
+ssize_t safe_read_string(int fd, void *buf, size_t len) {
   ssize_t total = 0;
 
   while(len > 0) {
