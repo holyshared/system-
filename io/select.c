@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <sys/time.h>
-#include <sys/types.h>
 #include <unistd.h>
 
 #define TIMEOUT 5
@@ -28,7 +27,7 @@ int main() {
   if (FD_ISSET(STDIN_FILENO, &readfds)) {
     char buf[BUFSIZ + 1];
 
-    int len = read(STDIN_FILENO, buf, BUFSIZ);
+    ssize_t len = read(STDIN_FILENO, buf, BUFSIZ);
 
     if (len == -1) {
       perror("read");
@@ -39,6 +38,7 @@ int main() {
       buf[len] = '\0';
       printf("read: %s\n", buf);
     }
+
     return 0;
   }
 
