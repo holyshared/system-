@@ -13,3 +13,5 @@ add_executable(poll io/poll.c)
 add_executable(select io/select.c)
 add_executable(stream io/stream.c)
 add_executable(stream_n io/stream_n.c)
+
+add_executable(fork process/fork.c)
