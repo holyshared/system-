@@ -29,5 +29,7 @@ int main() {
     return -1;
   }
 
+  printf("success!!\n");
+
   exit(EXIT_SUCCESS);
 }
